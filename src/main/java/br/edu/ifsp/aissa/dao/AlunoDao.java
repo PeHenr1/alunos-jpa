@@ -20,21 +20,22 @@ public class AlunoDao {
         System.out.println("\nAluno cadastrado com sucesso!");
     }
 
-    public void excluir(Long id) {
-        Aluno aluno = em.find(Aluno.class, id);
+    public void excluir(String nome) {
+        Aluno aluno = buscarPorNome(nome);
+
         if (aluno != null) {
             em.getTransaction().begin();
             em.remove(aluno);
             em.getTransaction().commit();
-            System.out.print("\nAluno removido com sucesso!");
-        }
-        else {
+            System.out.println("\nAluno removido com sucesso!");
+        } else {
             System.out.println("\nAluno não encontrado!");
         }
     }
 
-    public void alterar(Long id, String novoNome, String novoRa, String novoEmail, BigDecimal novaNota1, BigDecimal novaNota2, BigDecimal novaNota3) {
-        Aluno aluno = em.find(Aluno.class, id);
+    public void alterar(String nome, String novoNome, String novoRa, String novoEmail, BigDecimal novaNota1, BigDecimal novaNota2, BigDecimal novaNota3) {
+        Aluno aluno = buscarPorNome(nome);
+
         if (aluno != null) {
             em.getTransaction().begin();
             aluno.setNome(novoNome);
@@ -45,22 +46,20 @@ public class AlunoDao {
             aluno.setNota3(novaNota3);
             em.getTransaction().commit();
             System.out.print("\nAluno alterado com sucesso!");
-        }
-        else {
+        } else {
             System.out.println("\nAluno não encontrado!");
         }
     }
 
-    public List<Aluno> buscarPorNome(String nome) {
-        List<Aluno> alunos = em.createQuery("SELECT a FROM Aluno a WHERE a.nome LIKE :nome", Aluno.class)
-                .setParameter("nome", "%" + nome + "%")
+
+    public Aluno buscarPorNome(String nome) {
+        String jpql = "SELECT a FROM Aluno a WHERE a.nome = :nome";
+        List<Aluno> alunos = em.createQuery(jpql, Aluno.class)
+                .setParameter("nome", nome)
+                .setMaxResults(1)
                 .getResultList();
 
-        if (alunos.isEmpty()) {
-            System.out.println("\nAluno não encontrado!");
-        }
-
-        return alunos;
+        return alunos.isEmpty() ? null : alunos.getFirst();
     }
 
     public List<Aluno> listarTodos() {

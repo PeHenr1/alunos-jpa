@@ -49,14 +49,14 @@ public class CadastroDeAluno {
                     break;
                 case 2:
                     System.out.print("\n-- EXCLUIR ALUNO: --\n");
-                    System.out.print("ID do aluno a excluir: ");
-                    Long idExcluir = scanner.nextLong();
-                    alunoDao.excluir(idExcluir);
+                    System.out.print("Nome do aluno a excluir: ");
+                    String nomeExcluir = scanner.nextLine();
+                    alunoDao.excluir(nomeExcluir);
                     break;
                 case 3:
                     System.out.print("\n-- ALTERAR ALUNO: --\n");
-                    System.out.print("ID do aluno a alterar: ");
-                    Long idAlterar = scanner.nextLong();
+                    System.out.print("Nome do aluno a alterar: ");
+                    String nomeAlterar = scanner.nextLine();
                     scanner.nextLine();
                     System.out.print("Novo nome: ");
                     String novoNome = scanner.nextLine();
@@ -70,18 +70,22 @@ public class CadastroDeAluno {
                     BigDecimal novaNota2 = scanner.nextBigDecimal();
                     System.out.print("Nova Nota 3: ");
                     BigDecimal novaNota3 = scanner.nextBigDecimal();
-                    alunoDao.alterar(idAlterar, novoNome, novoRa, novoEmail, novaNota1, novaNota2, novaNota3);
+                    alunoDao.alterar(nomeAlterar, novoNome, novoRa, novoEmail, novaNota1, novaNota2, novaNota3);
                     break;
                 case 4:
                     System.out.print("\n-- BUSCAR ALUNO: --: \n");
                     System.out.print("Nome do aluno: ");
                     String buscaNome = scanner.nextLine();
-                    List<Aluno> encontrados = alunoDao.buscarPorNome(buscaNome);
-                    encontrados.forEach(a ->
-                        System.out.println("\nNome: " + a.getNome() +
-                                "\nEmail: " + a.getEmail() +
-                                "\nRA: " + a.getRa() +
-                                "\nNotas: " + a.getNota1() + " - "  + a.getNota2() + " - "  + a.getNota3()));
+                    Aluno encontrado = alunoDao.buscarPorNome(buscaNome);
+                    if(encontrado != null) {
+
+                        System.out.println("\nNome: " + encontrado.getNome() +
+                                "\nEmail: " + encontrado.getEmail() +
+                                "\nRA: " + encontrado.getRa() +
+                                "\nNotas: " + encontrado.getNota1() + " - " + encontrado.getNota2() + " - " + encontrado.getNota3());
+                    } else {
+                        System.out.println("Aluno não encontrado!");
+                    }
                     break;
                 case 5:
                     List<Aluno> alunos = alunoDao.listarTodos();
